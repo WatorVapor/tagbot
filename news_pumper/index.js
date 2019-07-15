@@ -1,40 +1,37 @@
-const request = require('request');
-const cheerio = require('cheerio');
-const requestList = [
-  'https://news.baidu.com',
-  'https://news.baidu.com/guonei',
-  'https://news.baidu.com/guoji',
-  'https://news.baidu.com/mil',
-  'https://news.baidu.com/finance',
-  'https://news.baidu.com/ent',
-  'https://news.baidu.com/sports',
-  'https://news.baidu.com/internet',
-  'https://news.baidu.com/tech',
-  'https://news.baidu.com/game',
-  'https://news.baidu.com/lady',
-  'https://news.baidu.com/auto',
-  'https://news.baidu.com/house'
-];
+const requestList = [];
+const baidu = require('./seed/baidu.js');
+for(let url of baidu.seeds) {
+  requestList.push(url);
+}
+//console.log('baidu=<',baidu,'>');
+const toutiao = require('./seed/toutiao.js');
+//console.log('toutiao=<',toutiao,'>');
+for(let url of toutiao.seeds) {
+  requestList.push(url);
+}
+console.log('requestList=<',requestList,'>');
 
+
+
+const https = require('https');
+const cheerio = require('cheerio');
 let globalLoopIndex = 0;
-onHttpRequest = (error, response, body) => {
-  if(error) {
-    throw error;
-  }
-  if(response.statusCode !== 200) {
-    throw response.statusCode;
-  }
-  //console.log('onHttpRequest::body=<',body,'>');
-  onHttpBody(body);
+onHttpRequest = (resp) => {
+  let body = '';
+  resp.on('data', (chunk) => {
+    body += chunk;
+  });
+  resp.on('end', () => {
+    onHttpBody(body);
+  });
 }
 
 
 
 readNews = (index) => {
-  const requestParam = {
-    url: requestList[index]
-  };
-  request.get(requestParam,onHttpRequest);
+  https.get(requestList[index],onHttpRequest).on("error", (err) => {
+    console.log('readNews::err=<',err,'>');
+  });
 }
 
 
@@ -63,8 +60,14 @@ onHttpBody= (body) => {
   }
 }
 
+const fs = require('fs');
+const root 
+onWatchLink = (href) => {
+  console.log('onWatchLink::href=<',href,'>');
+}
+/*
 const level = require('level');
-let db = level('./.baidunew_db');
+let db = level('./.new_db');
 onWatchLink = (href) => {
   //console.log('onWatchLink::href=<',href,'>');
   db.get(href, function (err, value) {
@@ -81,3 +84,4 @@ onWatchLink = (href) => {
 onWathNewLink = (href) => {
   console.log('onWathNewLink::href=<',href,'>');
 }
+*/

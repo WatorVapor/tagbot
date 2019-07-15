@@ -9,7 +9,7 @@ const toutiao = require('./seed/toutiao.js');
 for(let url of toutiao.seeds) {
   requestList.push(url);
 }
-console.log('requestList=<',requestList,'>');
+//console.log('requestList=<',requestList,'>');
 
 
 
@@ -60,10 +60,20 @@ onHttpBody= (body) => {
   }
 }
 
-const fs = require('fs');
-const root 
+const LevelDFS = require('./LevelDFS.js');
+//console.log('::LevelDFS=<',LevelDFS,'>');
+const db = new LevelDFS('./.news_discovery_db');
 onWatchLink = (href) => {
-  console.log('onWatchLink::href=<',href,'>');
+  //console.log('onWatchLink::href=<',href,'>');
+  db.get(href, (err, value) => {
+    //console.log('onWatchLink::err=<',err,'>');
+    if (err && err.notFound) {
+      db.put(href,'discover');
+      onWathNewLink(href);
+      return;
+    }
+    //console.log('onWatchLink::value=<',value,'>');
+  });
 }
 /*
 const level = require('level');
@@ -81,7 +91,9 @@ onWatchLink = (href) => {
     }
   });
 }
+*/
+
 onWathNewLink = (href) => {
   console.log('onWathNewLink::href=<',href,'>');
 }
-*/
+

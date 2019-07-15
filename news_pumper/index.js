@@ -13,6 +13,7 @@ for(let url of toutiao.seeds) {
 
 
 
+const http = require('http');
 const https = require('https');
 const cheerio = require('cheerio');
 let globalLoopIndex = 0;
@@ -92,6 +93,9 @@ onWatchLink = (href) => {
   });
 }
 */
+
+const redis = require('redis');
+const gPublisher = redis.createClient(6379, 'localhost');
 
 onWathNewLink = (href) => {
   console.log('onWathNewLink::href=<',href,'>');

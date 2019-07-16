@@ -69,7 +69,7 @@ onHttpBody= (body) => {
 
 const LevelDFS = require('./LevelDFS.js');
 //console.log('::LevelDFS=<',LevelDFS,'>');
-const db = new LevelDFS('./.news_discovery_db');
+const db = new LevelDFS('/watorvapor/ldfs/tagbot/news_discovery_db');
 onWatchLink = (href) => {
   //console.log('onWatchLink::href=<',href,'>');
   db.get(href, (err, value) => {

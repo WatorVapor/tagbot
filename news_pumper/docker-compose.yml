@@ -4,6 +4,7 @@ services:
     image: node:lts
     volumes:
       - ./:/home/app
+      - /watorvapor/ldfs/tagbot/news_discovery_db:/watorvapor/ldfs/tagbot/news_discovery_db
     working_dir: "/home/app"
     environment:
       - MMAX=1G 

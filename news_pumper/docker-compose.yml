@@ -1,0 +1,25 @@
+version: '3'
+services:
+  pumper:
+    image: node:lts
+    volumes:
+      - ./:/home/app
+    working_dir: "/home/app"
+    environment:
+      - MMAX=1G 
+      - ISDOCKER=true 
+    command: node app.js
+    networks:
+      - outside
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+networks:
+  outside:
+    external:
+      name: "host"

@@ -5,10 +5,14 @@ const redisOption = {
   family:'IPv6'
 };
 const redisNewsChannelDiscovery = 'redis.channel.news.discover';
-const gPublisher = redis.createClient(redisOption);
+const gSubscriber = redis.createClient(redisOption);
 
-onWathNewLink = (href) => {
-  console.log('onWathNewLink::href=<',href,'>');
-  gPublisher.publish(redisNewsChannelDiscovery, href);
+
+gSubscriber.on('message', (channel, message) => {
+  onDiscoveryNewLink(message);
+})
+gSubscriber.subscribe(redisNewsChannelDiscovery);
+
+const onDiscoveryNewLink = (href) => {
+  console.log('onDiscoveryNewLink::href=<',href,'>');
 }
-

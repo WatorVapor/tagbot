@@ -36,8 +36,13 @@ const onNewsText = (txt,href) => {
   //console.log('onNewsText::href=<',href,'>');
   let tags = wai.article(txt);
   //console.log('onNewsText::tags=<',tags,'>');
-  postTwitter(txt,href,tags);
+  postTwitter(href,tags);
 }
+
+const LevelDFS = require('./LevelDFS.js');
+//console.log('::LevelDFS=<',LevelDFS,'>');
+const db = new LevelDFS('/watorvapor/ldfs/tagbot/news_discovery_db');
+
 
 const Twitter = require('twitter');
 const clientTwitter = new Twitter({
@@ -46,12 +51,23 @@ const clientTwitter = new Twitter({
   access_token_key: '2479678550-zBgOIqB81GtIQj99K6pyqbDlN0dqlJx8pbNCnVp',
   access_token_secret: '7gxQyigISdvfjKNgQA6VCEIOtcZMSWDyGQs04rg2NgXXq'
 });
-const postTwitter = (txt,href,tags) => {
-  console.log('postTwitter::txt=<',txt,'>');
+const postTwitter = (href,tags) => {
   console.log('postTwitter::href=<',href,'>');
   console.log('postTwitter::tags=<',tags,'>');
-  const params = {screen_name: 'nodejs'};
-  clientTwitter.get('statuses/user_timeline', params, (error, tweets, response) =>{
+  let contents = '';
+  for(let tag of tags) {
+    contents += ' #' + tag.tag + '';
+  }
+  contents += '\n'
+  contents += '\n'
+  contents += '\n'
+  contents += href;
+  contents += '\n';
+  contents += '\n'
+  contents += '\n'
+  const postObject = {status: contents};
+  console.log('postTwitter::postObject=<',postObject,'>');
+  clientTwitter.post('statuses/update', postObject, (error, tweets, response) => {
     if (error) {
       throw error;
     }
@@ -61,10 +77,11 @@ const postTwitter = (txt,href,tags) => {
 }
 
 /**
- test 
-**/
+ test
+
 wai.onReady = () => {
   setTimeout(()=>{
     onDiscoveryNewLink('http://www.xinhuanet.com/politics/leaders/2019-07/22/c_1124785008.htm');
   },1000);
 }
+**/ 

@@ -91073,3 +91073,5 @@ const CJK_Table =
  "丁": true,
  "一": true
 }
+
+module.exports = CJK_Table;

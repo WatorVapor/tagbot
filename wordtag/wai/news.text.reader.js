@@ -49,6 +49,7 @@ module.exports = class NewsTextReader {
     if(typeof this.cb_ === 'function') {
       typeof this.cb_(this.bodyText_);
     }
+    //fs.writeFileSync('./temp.text.txt',this.bodyText_ , 'utf-8');
   }
   chouText_(elem) {
     //console.log('chouText_::elem=<',elem,'>');

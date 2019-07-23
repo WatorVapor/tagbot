@@ -17,18 +17,30 @@ gSubscriber.subscribe(redisNewsChannelDiscovery);
 const NewsTextReader = require('./wai/news.text.reader.js');
 const txtReader = new NewsTextReader('/watorvapor/ldfs/tagbot/news_text_db');
 
+const WaiTagBot = require('./wai/wai.tagbot.js');
+
+const wai = new WaiTagBot();
+
+
+
 const onDiscoveryNewLink = (href) => {
   console.log('onDiscoveryNewLink::href=<',href,'>');
-  txtReader.fetch(href,onNewsText);
+  txtReader.fetch(href,(txt)=>{
+    onNewsText(txt,href);
+  });
 }
 
-const onNewsText = (txt) => {
+const onNewsText = (txt,href) => {
   console.log('onNewsText::txt=<',txt,'>');
+  console.log('onNewsText::href=<',href,'>');
+  wai.article(txt);
 }
 
 /**
  test 
 **/
-setTimeout(()=>{
-  onDiscoveryNewLink('http://www.xinhuanet.com/politics/leaders/2019-07/22/c_1124785008.htm');
-},1000)
+wai.onReady = () => {
+  setTimeout(()=>{
+    onDiscoveryNewLink('http://www.xinhuanet.com/politics/leaders/2019-07/22/c_1124785008.htm');
+  },1000);
+}

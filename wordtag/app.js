@@ -22,13 +22,36 @@ const WaiTagBot = require('./wai/wai.tagbot.js');
 const wai = new WaiTagBot();
 
 
-
+const LevelDFS = require('./LevelDFS.js');
+//console.log('::LevelDFS=<',LevelDFS,'>');
+const db = new LevelDFS('/watorvapor/ldfs/tagbot/news_discovery_db');
 const onDiscoveryNewLink = (href) => {
   console.log('onDiscoveryNewLink::href=<',href,'>');
-  txtReader.fetch(href,(txt)=>{
+  db.get(href, (err, value) => {
+    if(err) {
+      throw err;
+    }
+    console.log('onDiscoveryNewLink::value=<',value,'>');
+    try {
+      const valueJson = JSON.parse(value);
+      if(valueJson.twitter) {
+        return;
+      }
+      valueJson.twitter = true;
+      let contents = JSON.stringify(valueJson);
+      db.put(href,contents);
+    }
+    catch(e) {
+      console.log('onDiscoveryNewLink::e=<',e,'>');
+      let contents = JSON.stringify({href:href,discover:true,twitter:true});
+      db.put(href,contents);
+    }
+    txtReader.fetch(href,(txt)=>{
     onNewsText(txt,href);
+    });
   });
 }
+
 
 
 const onNewsText = (txt,href) => {
@@ -39,9 +62,6 @@ const onNewsText = (txt,href) => {
   postTwitter(href,tags);
 }
 
-const LevelDFS = require('./LevelDFS.js');
-//console.log('::LevelDFS=<',LevelDFS,'>');
-const db = new LevelDFS('/watorvapor/ldfs/tagbot/news_discovery_db');
 
 
 const Twitter = require('twitter');
@@ -65,23 +85,27 @@ const postTwitter = (href,tags) => {
   contents += '\n';
   contents += '\n'
   contents += '\n'
+  contents += '  Powered by https://www.wator.xyz  \n'
+  contents += '\n'
+  contents += '\n'
+  contents += '\n'
   const postObject = {status: contents};
   console.log('postTwitter::postObject=<',postObject,'>');
   clientTwitter.post('statuses/update', postObject, (error, tweets, response) => {
     if (error) {
       throw error;
     }
-    console.log('postTwitter::tweets=<',tweets,'>');
-    console.log('postTwitter::response=<',response,'>');
+    //console.log('postTwitter::tweets=<',tweets,'>');
+    //console.log('postTwitter::response=<',response,'>');
   });
 }
 
 /**
  test
-
+**/
 wai.onReady = () => {
   setTimeout(()=>{
     onDiscoveryNewLink('http://www.xinhuanet.com/politics/leaders/2019-07/22/c_1124785008.htm');
   },1000);
 }
-**/ 
+

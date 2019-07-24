@@ -75,7 +75,8 @@ onWatchLink = (href) => {
   db.get(href, (err, value) => {
     //console.log('onWatchLink::err=<',err,'>');
     if (err && err.notFound) {
-      db.put(href,'discover://' + href);
+      let contents = JSON.stringify({href:href,discover:true});
+      db.put(href,contents);
       onWathNewLink(href);
       return;
     }

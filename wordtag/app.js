@@ -21,11 +21,19 @@ const WaiTagBot = require('./wai/wai.tagbot.js');
 
 const wai = new WaiTagBot();
 
-
+let lastPostTime = Date.now();
 const LevelDFS = require('./LevelDFS.js');
 //console.log('::LevelDFS=<',LevelDFS,'>');
 const db = new LevelDFS('/watorvapor/ldfs/tagbot/news_discovery_db');
 const onDiscoveryNewLink = (href) => {
+  const now = Date.now();
+  const escape = now - lastPostTime;
+  if(escape < 1000 * 60){
+    console.log('onDiscoveryNewLink:: too busy href=<',href,'>');
+    console.log('onDiscoveryNewLink:: escape=<',escape,'>');
+    return;
+  }
+  lastPostTime = now;
   console.log('onDiscoveryNewLink::href=<',href,'>');
   db.get(href, (err, value) => {
     if(err) {
@@ -61,7 +69,6 @@ const onNewsText = (txt,href) => {
   //console.log('onNewsText::tags=<',tags,'>');
   postTwitter(href,tags);
 }
-
 
 
 const Twitter = require('twitter');

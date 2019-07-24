@@ -24,6 +24,7 @@ services:
     image: node:lts
     volumes:
       - ./wordtag:/home/app
+      - /watorvapor/wai.storage/wai.native.wator/db/zhizi/cn.cast:/watorvapor/wai.storage/wai.native.wator/db/zhizi/cn.cast
       - /watorvapor/ldfs/tagbot/news_discovery_db:/watorvapor/ldfs/tagbot/news_discovery_db
     working_dir: "/home/app"
     environment:

@@ -59,6 +59,8 @@ onHttpBody= (body) => {
   if(globalLoopIndex < requestList.length) {
     readNews(globalLoopIndex++);
   } else {
+    const now = new Date();
+    console.log('onWathNewLink::now=<',now.toUTCString(),'>');
     console.log('wait 2 min for next loop ...');
     setTimeout(()=> {
       globalLoopIndex = 0;
@@ -111,8 +113,8 @@ const redisNewsChannelDiscovery = 'redis.channel.news.discover';
 const gPublisher = redis.createClient(redisOption);
 
 onWathNewLink = (href) => {
-  const now = new Date();
   console.log('onWathNewLink::href=<',href,'>');
+  const now = new Date();
   console.log('onWathNewLink::now=<',now.toUTCString(),'>');
   gPublisher.publish(redisNewsChannelDiscovery, href);
 }

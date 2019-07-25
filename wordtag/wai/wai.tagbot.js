@@ -1,10 +1,12 @@
 const WaiBase = require('./wai.base.js');
+const fs = require('fs');
 
 const iConstNGramMaxWindow = 64;
 class WaiTagBot extends WaiBase {
   constructor() {
     super();
-    this.phrase_ = require('./wai.phrase.json');;
+    let content = fs.readFileSync('./wai.phrase.json', 'utf8');
+    this.phrase_ = JSON.parse(content);;
     if(typeof this.onReady === 'function') {
       this.onReady();
     }

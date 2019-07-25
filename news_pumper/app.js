@@ -63,7 +63,7 @@ onHttpBody= (body) => {
     setTimeout(()=> {
       globalLoopIndex = 0;
       readNews(globalLoopIndex);
-    },1000*60 * 10);
+    },1000*60 * 2);
   }
 }
 

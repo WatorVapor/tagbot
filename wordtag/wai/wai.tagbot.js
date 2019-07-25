@@ -8,10 +8,12 @@ class WaiTagBot extends WaiBase {
     console.log('WaiTagBot::constructor start read...>');
     let content = fs.readFileSync('./wai.phrase.json', 'utf8');
     console.log('WaiTagBot::constructor content.length=<',content.length,'>');
-    this.phrase_ = JSON.parse(content);;
-    if(typeof this.onReady === 'function') {
-      this.onReady();
-    }
+    this.phrase_ = JSON.parse(content);
+    setTimeout(()=> {
+      if(typeof this.onReady === 'function') {
+        this.onReady();
+      }      
+    },1000);
   }
   article(doc) {
     this.wordFreqs_ = {};

@@ -14,7 +14,7 @@ db_.createReadStream()
 })
 .on('end', (evt) =>{
   console.log('WaiTagBot::constructor end evt=<',evt,'>');
-  fs.writeFileSync('./wai.phrase.json',JSON.stringify(phrase_,undefined,'  '));
+  fs.writeFileSync('./wai.phrase.json',JSON.stringify(phrase_,undefined,'  '),'utf8');
 });
 
 

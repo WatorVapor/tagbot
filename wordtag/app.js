@@ -31,6 +31,7 @@ const onDiscoveryNewLink = (href) => {
   if(escape < 1000 * 60){
     console.log('onDiscoveryNewLink:: too busy href=<',href,'>');
     console.log('onDiscoveryNewLink:: escape=<',escape,'>');
+    console.log('onDiscoveryNewLink:: now=<',now,'>');
     return;
   }
   lastPostTime = now;

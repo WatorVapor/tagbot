@@ -61,11 +61,11 @@ onHttpBody= (body) => {
   } else {
     const now = new Date();
     console.log('onWathNewLink::now=<',now.toUTCString(),'>');
-    console.log('wait 2 min for next loop ...');
+    console.log('wait 5 min for next loop ...');
     setTimeout(()=> {
       globalLoopIndex = 0;
       readNews(globalLoopIndex);
-    },1000*60 * 2);
+    },1000*60 * 5);
   }
 }
 

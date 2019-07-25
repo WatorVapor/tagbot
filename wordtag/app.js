@@ -1,3 +1,5 @@
+let gLastPostTitterTime = new Date();
+
 const redis = require('redis');
 const redisOption = {
   host:'node2.ceph.wator.xyz',
@@ -33,24 +35,23 @@ const onDiscoveryNewLink = (href) => {
   setTimeout(onLearnNewLink,1000);
 }
 
-let lastPostTime = new Date();
 const onLearnNewLink = () => {
   const now = new Date();
-  const escape = now - lastPostTime;
+  const escape = now - gLastPostTitterTime;
   if(escape < 1000 * 60){
     console.log('onLearnNewLink:: too busy gNewLinks=<',gNewLinks,'>');
     console.log('onLearnNewLink:: escape=<',escape,'>');
     console.log('onLearnNewLink:: now=<',now.toUTCString(),'>');
     return;
   }
-  lastPostTime = now;
   if(gNewLinks.length < 1) {
     return;
   } 
-  let href = gNewLinks.slice(-1);
-  gNewLinks.splice(-1);
-  console.log('onLearnNewLink:: too busy gNewLinks=<',gNewLinks,'>');
+  let href = gNewLinks[gNewLinks.length -1];
   console.log('onLearnNewLink::href=<',href,'>');
+  console.log('onLearnNewLink:: gNewLinks=<',gNewLinks,'>');
+  gNewLinks.splice(-1);
+  console.log('onLearnNewLink:: gNewLinks=<',gNewLinks,'>');
   db.get(href, (err, value) => {
     if(err) {
       throw err;
@@ -59,6 +60,7 @@ const onLearnNewLink = () => {
     try {
       const valueJson = JSON.parse(value);
       if(valueJson.twitter) {
+        setTimeout(onLearnNewLink,1000);
         return;
       }
       valueJson.twitter = true;
@@ -115,6 +117,7 @@ const postTwitter = (href,tags) => {
   const postObject = {status: contents};
   console.log('postTwitter::postObject=<',postObject,'>');
   clientTwitter.post('statuses/update', postObject, (error, tweets, response) => {
+    gLastPostTitterTime = now;
     setTimeout(onLearnNewLink,1000*60);
     if (error) {
       throw error;
@@ -130,6 +133,6 @@ const postTwitter = (href,tags) => {
 wai.onReady = () => {
   setTimeout(()=>{
     onDiscoveryNewLink('http://www.xinhuanet.com/politics/leaders/2019-07/22/c_1124785008.htm');
-  },1000);
+  },1000*60);
 }
 

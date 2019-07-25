@@ -1,28 +1,13 @@
 const WaiBase = require('./wai.base.js');
-const level = require('level');
-const gDBPath = '/watorvapor/wai.storage/wai.native.wator/db/zhizi/cn.cast';
 
 const iConstNGramMaxWindow = 64;
 class WaiTagBot extends WaiBase {
   constructor() {
     super();
-    this.db_ = level(gDBPath,{ createIfMissing: false });
-    this.phrase_ = {};
-    this.db_.createReadStream()
-    .on('data', (data) =>{
-      //console.log('WaiTagBot::onSentence_ data=<',data,'>');
-      this.phrase_[data.key] = parseFloat(data.value);
-    })
-    .on('error', (err) =>{
-    })
-    .on('close', () =>{
-    })
-    .on('end', (evt) =>{
-      console.log('WaiTagBot::constructor end evt=<',evt,'>');
-      if(typeof this.onReady === 'function') {
-        this.onReady();
-      }
-    })
+    this.phrase_ = require('./wai.phrase.json');;
+    if(typeof this.onReady === 'function') {
+      this.onReady();
+    }
   }
   article(doc) {
     this.wordFreqs_ = {};

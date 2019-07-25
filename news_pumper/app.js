@@ -59,7 +59,7 @@ onHttpBody= (body) => {
   if(globalLoopIndex < requestList.length) {
     readNews(globalLoopIndex++);
   } else {
-    console.log('wait 10 min for next loop ...');
+    console.log('wait 2 min for next loop ...');
     setTimeout(()=> {
       globalLoopIndex = 0;
       readNews(globalLoopIndex);

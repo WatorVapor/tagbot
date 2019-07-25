@@ -115,7 +115,7 @@ const postTwitter = (href,tags) => {
   const postObject = {status: contents};
   console.log('postTwitter::postObject=<',postObject,'>');
   clientTwitter.post('statuses/update', postObject, (error, tweets, response) => {
-    setTimeout(onLearnNewLink,1000);
+    setTimeout(onLearnNewLink,1000*60);
     if (error) {
       throw error;
     }

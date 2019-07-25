@@ -21,26 +21,41 @@ const WaiTagBot = require('./wai/wai.tagbot.js');
 
 const wai = new WaiTagBot();
 
-let lastPostTime = new Date();
 const LevelDFS = require('./LevelDFS.js');
 //console.log('::LevelDFS=<',LevelDFS,'>');
 const db = new LevelDFS('/watorvapor/ldfs/tagbot/news_discovery_db');
+const gNewLinks = [];
 const onDiscoveryNewLink = (href) => {
+  gNewLinks.push(href);
+  if(gNewLinks.length > 5) {
+    gNewLinks.shift();
+  }
+  setTimeout(onLearnNewLink,1000);
+}
+
+let lastPostTime = new Date();
+const onLearnNewLink = () => {
   const now = new Date();
   const escape = now - lastPostTime;
   if(escape < 1000 * 60){
-    console.log('onDiscoveryNewLink:: too busy href=<',href,'>');
-    console.log('onDiscoveryNewLink:: escape=<',escape,'>');
-    console.log('onDiscoveryNewLink:: now=<',now.toUTCString(),'>');
+    console.log('onLearnNewLink:: too busy gNewLinks=<',gNewLinks,'>');
+    console.log('onLearnNewLink:: escape=<',escape,'>');
+    console.log('onLearnNewLink:: now=<',now.toUTCString(),'>');
     return;
   }
   lastPostTime = now;
-  console.log('onDiscoveryNewLink::href=<',href,'>');
+  if(gNewLinks.length < 1) {
+    return;
+  } 
+  let href = gNewLinks.slice(-1);
+  gNewLinks.splice(-1);
+  console.log('onLearnNewLink:: too busy gNewLinks=<',gNewLinks,'>');
+  console.log('onLearnNewLink::href=<',href,'>');
   db.get(href, (err, value) => {
     if(err) {
       throw err;
     }
-    console.log('onDiscoveryNewLink::value=<',value,'>');
+    console.log('onLearnNewLink::value=<',value,'>');
     try {
       const valueJson = JSON.parse(value);
       if(valueJson.twitter) {
@@ -51,12 +66,12 @@ const onDiscoveryNewLink = (href) => {
       db.put(href,contents);
     }
     catch(e) {
-      console.log('onDiscoveryNewLink::e=<',e,'>');
+      console.log('onLearnNewLink::e=<',e,'>');
       let contents = JSON.stringify({href:href,discover:true,twitter:true});
       db.put(href,contents);
     }
     txtReader.fetch(href,(txt)=>{
-    onNewsText(txt,href);
+      onNewsText(txt,href);
     });
   });
 }
@@ -100,6 +115,7 @@ const postTwitter = (href,tags) => {
   const postObject = {status: contents};
   console.log('postTwitter::postObject=<',postObject,'>');
   clientTwitter.post('statuses/update', postObject, (error, tweets, response) => {
+    setTimeout(onLearnNewLink,1000);
     if (error) {
       throw error;
     }

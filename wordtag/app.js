@@ -118,7 +118,7 @@ const postTwitter = (href,tags) => {
   const postObject = {status: contents};
   console.log('postTwitter::postObject=<',postObject,'>');
   clientTwitter.post('statuses/update', postObject, (error, tweets, response) => {
-    gLastPostTitterTime = now;
+    gLastPostTitterTime = new Date();;
     setTimeout(onLearnNewLink,1000*60);
     if (error) {
       throw error;

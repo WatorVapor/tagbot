@@ -113,7 +113,7 @@ const gPublisher = redis.createClient(redisOption);
 onWathNewLink = (href) => {
   const now = Date.now();
   console.log('onWathNewLink::href=<',href,'>');
-  console.log('onWathNewLink::now=<',now.toGMTString(),'>');
+  console.log('onWathNewLink::now=<',now.toUTCString(),'>');
   gPublisher.publish(redisNewsChannelDiscovery, href);
 }
 

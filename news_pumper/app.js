@@ -111,7 +111,9 @@ const redisNewsChannelDiscovery = 'redis.channel.news.discover';
 const gPublisher = redis.createClient(redisOption);
 
 onWathNewLink = (href) => {
+  const now = Date.now();
   console.log('onWathNewLink::href=<',href,'>');
+  console.log('onWathNewLink::now=<',now,'>');
   gPublisher.publish(redisNewsChannelDiscovery, href);
 }
 

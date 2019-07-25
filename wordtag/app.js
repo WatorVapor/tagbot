@@ -45,6 +45,7 @@ const onLearnNewLink = () => {
     return;
   }
   if(gNewLinks.length < 1) {
+    console.log('onLearnNewLink:: gNewLinks=<',gNewLinks,'>');
     return;
   } 
   let href = gNewLinks[gNewLinks.length -1];

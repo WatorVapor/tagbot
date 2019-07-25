@@ -31,10 +31,10 @@ onHttpRequest = (resp) => {
 
 
 readNews = (index) => {
-  const req = https.get(requestList[index],onHttpRequest).on("error", (err) => {
+  const req = https.get(requestList[index],{timeout:1000*5},onHttpRequest).on("error", (err) => {
     console.log('readNews::err=<',err,'>');
   });
-  req.setTimeout(1000);
+  //req.setTimeout(1000);
 }
 
 

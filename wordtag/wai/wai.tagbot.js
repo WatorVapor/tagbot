@@ -5,7 +5,9 @@ const iConstNGramMaxWindow = 64;
 class WaiTagBot extends WaiBase {
   constructor() {
     super();
+    console.log('WaiTagBot::constructor start read...>');
     let content = fs.readFileSync('./wai.phrase.json', 'utf8');
+    console.log('WaiTagBot::constructor content.length=<',content.length,'>');
     this.phrase_ = JSON.parse(content);;
     if(typeof this.onReady === 'function') {
       this.onReady();

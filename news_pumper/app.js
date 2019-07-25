@@ -18,6 +18,7 @@ const https = require('https');
 const cheerio = require('cheerio');
 let globalLoopIndex = 0;
 onHttpRequest = (resp) => {
+  resp.setEncoding('utf8');
   let body = '';
   resp.on('data', (chunk) => {
     body += chunk;
@@ -30,9 +31,10 @@ onHttpRequest = (resp) => {
 
 
 readNews = (index) => {
-  https.get(requestList[index],onHttpRequest).on("error", (err) => {
+  const req = https.get(requestList[index],onHttpRequest).on("error", (err) => {
     console.log('readNews::err=<',err,'>');
   });
+  req.setTimeout(1000);
 }
 
 
@@ -85,23 +87,7 @@ onWatchLink = (href) => {
     //console.log('onWatchLink::value=<',value,'>');
   });
 }
-/*
-const level = require('level');
-let db = level('./.new_db');
-onWatchLink = (href) => {
-  //console.log('onWatchLink::href=<',href,'>');
-  db.get(href, function (err, value) {
-    if(err) {
-      //console.log('onWatchLink::err=<',err,'>');
-      if (err.notFound) {
-        //console.log('onWatchLink::href=<',href,'>');
-        db.put(href,'');
-        onWathNewLink(href);
-      }
-    }
-  });
-}
-*/
+
 
 const redis = require('redis');
 const redisOption = {

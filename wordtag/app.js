@@ -38,7 +38,7 @@ const onDiscoveryNewLink = (href) => {
 const onLearnNewLink = () => {
   const now = new Date();
   const escape = now - gLastPostTitterTime;
-  if(escape < 1000 * 60){
+  if(escape < 1000 * 60 * 3){
     console.log('onLearnNewLink:: too busy gNewLinks=<',gNewLinks,'>');
     console.log('onLearnNewLink:: escape=<',escape,'>');
     console.log('onLearnNewLink:: now=<',now.toUTCString(),'>');
@@ -86,7 +86,11 @@ const onNewsText = (txt,href) => {
   //console.log('onNewsText::href=<',href,'>');
   let tags = wai.article(txt);
   //console.log('onNewsText::tags=<',tags,'>');
-  postTwitter(href,tags);
+  if(tags.length > 8) {
+    postTwitter(href,tags);
+    return;
+  }
+  setTimeout(onLearnNewLink,1000);
 }
 
 
@@ -119,11 +123,12 @@ const postTwitter = (href,tags) => {
   console.log('postTwitter::postObject=<',postObject,'>');
   clientTwitter.post('statuses/update', postObject, (error, tweets, response) => {
     gLastPostTitterTime = new Date();;
-    setTimeout(onLearnNewLink,1000*60);
     if (error) {
       console.log('postTwitter::error=<',error,'>');
+      setTimeout(onLearnNewLink,1000 * 60 * 5);
       throw error;
     }
+    setTimeout(onLearnNewLink,1000*60);
     //console.log('postTwitter::tweets=<',tweets,'>');
     //console.log('postTwitter::response=<',response,'>');
   });

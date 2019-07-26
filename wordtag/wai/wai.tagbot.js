@@ -80,7 +80,7 @@ class WaiTagBot extends WaiBase {
       return 0;
     });
     //console.log('WaiTagBot::calcWeight_ weights=<',weights,'>');
-    return weights.slice(0, 32);
+    return weights.slice(0, 21);
   }
 }
 

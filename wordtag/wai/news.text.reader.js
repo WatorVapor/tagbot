@@ -18,13 +18,13 @@ module.exports = class NewsTextReader {
     console.log('fetch::href=<',href,'>');
     this.cb_ = cb;
     if(href.startsWith('https://')) {
-      const req = https.get(href,{timeout:1000*5},this.onHttpRequest_.bind(this)).on("error", (err) => {
+      const req = https.get(href,{timeout:1000*32},this.onHttpRequest_.bind(this)).on("error", (err) => {
         console.log('fetch::err=<',err,'>');
       });
       //req.setTimeout(1000);
     }
     if(href.startsWith('http://')) {
-      const req = http.get(href,{timeout:1000*5},this.onHttpRequest_.bind(this)).on("error", (err) => {
+      const req = http.get(href,{timeout:1000*32},this.onHttpRequest_.bind(this)).on("error", (err) => {
         console.log('fetch::err=<',err,'>');
       });
       //req.setTimeout(1000);

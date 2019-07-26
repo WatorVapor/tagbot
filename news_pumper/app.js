@@ -29,8 +29,9 @@ onHttpRequest = (resp) => {
 }
 
 
-
+let gLastReadTime = new Date();
 readNews = (index) => {
+  gLastReadTime = new Date();
   const req = https.get(requestList[index],{timeout:1000*5},onHttpRequest).on("error", (err) => {
     console.log('readNews::err=<',err,'>');
   });
@@ -38,7 +39,21 @@ readNews = (index) => {
 }
 
 
-readNews(globalLoopIndex);
+const onCheckTaskRun = () => {
+  const now =  new Date();
+  const escape  =  now - gLastReadTime;
+  console.log('onCheckTaskRun::escape=<',escape,'>');
+  if(escape > 1000*60*10) {
+    globalLoopIndex = 0;
+    readNews(globalLoopIndex);    
+  }
+  setTimeout(onCheckTaskRun,1000*60*10);
+};
+
+setTimeout(onCheckTaskRun,1000*60*10);
+setTimeout(()=>{
+  readNews(globalLoopIndex);
+},1000);
 
 onHttpBody= (body) => {
   const $ = cheerio.load(body);

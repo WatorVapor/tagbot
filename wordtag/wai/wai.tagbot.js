@@ -68,7 +68,7 @@ class WaiTagBot extends WaiBase {
       let freq = collect[word];
       //console.log('WaiTagBot::calcWeight_ freq=<',freq,'>');
       //sortedCollect.push({w:word,freq:collect[word]})
-      let weight = freq * freq * freq * freq * probability * word.length * word.length;
+      let weight = freq * freq * freq * freq * word.length * word.length * word.length * word.length * probability ;
       weights.push({tag:word,weight:weight});
     }
     //console.log('WaiTagBot::calcWeight_ weights=<',weights,'>');

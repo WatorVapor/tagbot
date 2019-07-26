@@ -121,6 +121,7 @@ const postTwitter = (href,tags) => {
     gLastPostTitterTime = new Date();;
     setTimeout(onLearnNewLink,1000*60);
     if (error) {
+      console.log('postTwitter::error=<',error,'>');
       throw error;
     }
     //console.log('postTwitter::tweets=<',tweets,'>');

@@ -1,4 +1,5 @@
 module.exports.seeds = [
+/*
   'https://www.toutiao.com/',
   'https://www.toutiao.com/ch/news_tech/',
   'https://www.toutiao.com/ch/news_entertainment/',
@@ -17,4 +18,5 @@ module.exports.seeds = [
   'https://www.toutiao.com/ch/news_essay/',
   'https://www.toutiao.com/ch/news_history/',
   'https://www.toutiao.com/ch/news_food/',
+*/
 ];

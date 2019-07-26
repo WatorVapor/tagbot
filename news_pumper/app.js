@@ -9,7 +9,12 @@ const toutiao = require('./seed/toutiao.js');
 for(let url of toutiao.seeds) {
   requestList.push(url);
 }
-//console.log('requestList=<',requestList,'>');
+const sogou = require('./seed/sogou.js');
+//console.log('sogou=<',sogou,'>');
+for(let url of sogou.seeds) {
+  requestList.push(url);
+}
+console.log('requestList=<',requestList,'>');
 
 
 
@@ -67,9 +72,12 @@ onHttpBody= (body) => {
     //console.log('onHttpBody::linkOne=<',linkOne,'>');
     if(linkOne.attribs && linkOne.attribs.href) {
       let href = linkOne.attribs.href;
+      //console.log('onHttpBody::href=<',href,'>');
       if(href.startsWith('http://') || href.startsWith('https://')) {
         //console.log('onHttpBody::href=<',href,'>');
         onWatchLink(href);
+      } else {
+        //console.log('onHttpBody::href=<',href,'>');
       }
     }
   }

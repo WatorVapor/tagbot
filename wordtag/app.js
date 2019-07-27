@@ -83,13 +83,13 @@ const onLearnNewLink = () => {
 
 
 
-const onNewsText = (txt,href) => {
+const onNewsText = (txt,myhref) => {
   //console.log('onNewsText::txt=<',txt,'>');
-  //console.log('onNewsText::href=<',href,'>');
+  //console.log('onNewsText::myhref=<',myhref,'>');
   let tags = wai.article(txt);
   //console.log('onNewsText::tags=<',tags,'>');
   if(tags.length > 8) {
-    postTwitter(href,tags);
+    postTwitter(myhref,tags);
     return;
   }
   setTimeout(onLearnNewLink,1000);
@@ -103,8 +103,8 @@ const clientTwitter = new Twitter({
   access_token_key: '2479678550-zBgOIqB81GtIQj99K6pyqbDlN0dqlJx8pbNCnVp',
   access_token_secret: '7gxQyigISdvfjKNgQA6VCEIOtcZMSWDyGQs04rg2NgXXq'
 });
-const postTwitter = (href,tags) => {
-  console.log('postTwitter::href=<',href,'>');
+const postTwitter = (myhref,tags) => {
+  console.log('postTwitter::myhref=<',myhref,'>');
   console.log('postTwitter::tags=<',tags,'>');
   let contents = '';
   for(let tag of tags) {
@@ -113,7 +113,7 @@ const postTwitter = (href,tags) => {
   contents += '\n'
   contents += '\n'
   contents += '\n'
-  contents += href;
+  contents += myhref;
   contents += '\n';
   contents += '\n'
   contents += '\n'

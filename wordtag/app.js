@@ -17,7 +17,8 @@ gSubscriber.subscribe(redisNewsChannelDiscovery);
 
 
 const NewsTextReader = require('./wai/news.text.reader.js');
-const txtReader = new NewsTextReader('/watorvapor/ldfs/tagbot/news_text_db');
+const constTextDBPath = '/watorvapor/ldfs/tagbot/news_text_db';
+
 
 const WaiTagBot = require('./wai/wai.tagbot.js');
 
@@ -73,8 +74,9 @@ const onLearnNewLink = () => {
       let contents = JSON.stringify({href:href,discover:true,twitter:true});
       db.put(href,contents);
     }
-    txtReader.fetch(href,(txt)=>{
-      onNewsText(txt,href);
+    const txtReader = new NewsTextReader(constTextDBPath);
+    txtReader.fetch(href,(txt,myhref)=>{
+      onNewsText(txt,myhref);
     });
   });
 }

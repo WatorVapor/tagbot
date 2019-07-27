@@ -38,7 +38,7 @@ const onDiscoveryNewLink = (href) => {
 const onLearnNewLink = () => {
   const now = new Date();
   const escape = now - gLastPostTitterTime;
-  if(escape < 1000 * 60 * 3){
+  if(escape < 1000 * 60 * 5){
     console.log('onLearnNewLink:: too busy gNewLinks=<',gNewLinks,'>');
     console.log('onLearnNewLink:: escape=<',escape,'>');
     console.log('onLearnNewLink:: now=<',now.toUTCString(),'>');
@@ -128,7 +128,7 @@ const postTwitter = (href,tags) => {
       setTimeout(onLearnNewLink,1000 * 60 * 5);
       throw error;
     }
-    setTimeout(onLearnNewLink,1000*60);
+    setTimeout(onLearnNewLink,1000*60*5);
     //console.log('postTwitter::tweets=<',tweets,'>');
     //console.log('postTwitter::response=<',response,'>');
   });

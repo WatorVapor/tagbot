@@ -117,7 +117,11 @@ const postTwitter = (myhref,tags) => {
   contents += '\n';
   contents += '\n'
   contents += '\n'
-  contents += '  Powered by https://www.wator.xyz  \n'
+  contents += '  请关注 https://www.wator.xyz  \n'
+  contents += '\n'
+  contents += '\n'
+  contents += '\n'
+  contents += '  请关注 https://www.wator.xyz/wai  \n'
   contents += '\n'
   contents += '\n'
   contents += '\n'

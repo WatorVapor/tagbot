@@ -19,6 +19,7 @@ const clientTwitter = new Twitter({
 
 let gLastPostTitterTime = new Date();
 
+const iConstSNSEscapeTime = 1000*1;
 
 module.exports = class TagBot {
   constructor() {
@@ -37,12 +38,13 @@ module.exports = class TagBot {
     **/
     this.wai_.onReady = () => {
       setTimeout(()=>{
-        self.onDiscoveryNewLink_('http://www.xinhuanet.com/politics/leaders/2019-07/22/c_1124785008.htm');
-      },1000*60);
+        let msg = {lang:'ja',href:'http://www.xinhuanet.com/politics/leaders/2019-07/22/c_1124785008.htm'};
+        self.onDiscoveryNewLink_(JSON.stringify(msg));
+      },1000*2);
     }
   }
-  onDiscoveryNewLink_ (href){
-    this.gNewLinks_.push(href);
+  onDiscoveryNewLink_ (msg){
+    this.gNewLinks_.push(msg);
     if(this.gNewLinks_.length > 5) {
       this.gNewLinks_.shift();
     }
@@ -51,7 +53,7 @@ module.exports = class TagBot {
   onLearnNewLink_ () {
     const now = new Date();
     const escape = now - gLastPostTitterTime;
-    if(escape < 1000 * 60 * 5){
+    if(escape < iConstSNSEscapeTime){
       console.log('onLearnNewLink_:: too busy this.gNewLinks_=<',this.gNewLinks_,'>');
       console.log('onLearnNewLink_:: escape=<',escape,'>');
       console.log('onLearnNewLink_:: now=<',now.toUTCString(),'>');
@@ -60,15 +62,21 @@ module.exports = class TagBot {
     if(this.gNewLinks_.length < 1) {
       console.log('onLearnNewLink_:: this.gNewLinks_=<',this.gNewLinks_,'>');
       return;
-    } 
-    let href = this.gNewLinks_[this.gNewLinks_.length -1];
+    }
+    let msg = this.gNewLinks_[this.gNewLinks_.length -1];
+    let msgJson = JSON.parse(msg);
+    let lang = msgJson.lang;
+    let href = msgJson.href;
     console.log('onLearnNewLink_::href=<',href,'>');
-    console.log('onLearnNewLink_:: this.gNewLinks_=<',this.gNewLinks_,'>');
     this.gNewLinks_.splice(-1);
     console.log('onLearnNewLink_:: this.gNewLinks_=<',this.gNewLinks_,'>');
     let self = this;
-    this.hrefdb_.get(href, (err, value) => {
+    let dbPath = '/watorvapor/ldfs/tagbot/' + lang + '/news_discovery_db';
+    console.log('onLearnNewLink_:: dbPath=<',dbPath,'>');
+    let db = new LevelDFS(dbPath);
+    db.get(href, (err, value) => {
       if(err) {
+         console.log('onLearnNewLink_::err=<',err,'>');
         throw err;
       }
       console.log('onLearnNewLink_::value=<',value,'>');

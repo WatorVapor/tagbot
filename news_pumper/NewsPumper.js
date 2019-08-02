@@ -12,7 +12,7 @@ const redisOption = {
   port:6379,
   family:'IPv6'
 };
-const redisNewsChannelDiscovery = 'redis.channel.news.discover';
+const redisNewsChannelDiscovery = 'redis.channel.news.discover.multi.lang';
 const gPublisher = redis.createClient(redisOption);
 
 
@@ -109,7 +109,7 @@ module.exports = class NewsPumper {
     console.log('onWathNewLink_::href=<',href,'>');
     const now = new Date();
     console.log('onWathNewLink_::now=<',now.toUTCString(),'>');
-    //gPublisher.publish(redisNewsChannelDiscovery, JSON.stringify({href:href,lang:this.lang_}));
+    gPublisher.publish(redisNewsChannelDiscovery, JSON.stringify({href:href,lang:this.lang_}));
   }
 
   onCheckTaskRun_ () {
@@ -125,83 +125,4 @@ module.exports = class NewsPumper {
 
 
 }
-
-/*
-let globalLoopIndex = 0;
-onHttpRequest = (resp) => {
-  resp.setEncoding('utf8');
-  let body = '';
-  resp.on('data', (chunk) => {
-    body += chunk;
-  });
-  resp.on('end', () => {
-    onHttpBody(body);
-  });
-}
-
-
-let gLastReadTime = new Date();
-readNews = (index) => {
-  gLastReadTime = new Date();
-  const req = https.get(requestList[index],{timeout:1000*5},onHttpRequest).on("error", (err) => {
-    console.log('readNews::err=<',err,'>');
-  });
-  //req.setTimeout(1000);
-}
-
-
-const onCheckTaskRun = () => {
-  const now =  new Date();
-  const escape  =  now - gLastReadTime;
-  console.log('onCheckTaskRun::escape=<',escape,'>');
-  if(escape > 1000*60*10) {
-    globalLoopIndex = 0;
-    readNews(globalLoopIndex);    
-  }
-  setTimeout(onCheckTaskRun,1000*60*10);
-};
-
-setTimeout(onCheckTaskRun,1000*60*10);
-
-setTimeout(()=>{
-  readNews(globalLoopIndex);
-},1000);
-
-onHttpBody= (body) => {
-  const $ = cheerio.load(body);
-  let link = $('a');
-  //console.log('onHttpBody::link=<',link,'>');
-  let linkKey = Object.keys(link);
-  //console.log('onHttpBody::linkKey=<',linkKey,'>');
-  for(let i = 0;i < linkKey.length;i++) {
-    let key = linkKey[i];
-    let linkOne = link[key];
-    //console.log('onHttpBody::linkOne=<',linkOne,'>');
-    if(linkOne.attribs && linkOne.attribs.href) {
-      let href = linkOne.attribs.href;
-      //console.log('onHttpBody::href=<',href,'>');
-      if(href.startsWith('http://') || href.startsWith('https://')) {
-        //console.log('onHttpBody::href=<',href,'>');
-        onWatchLink(href);
-      } else {
-        //console.log('onHttpBody::href=<',href,'>');
-      }
-    }
-  }
-  if(globalLoopIndex < requestList.length) {
-    readNews(globalLoopIndex++);
-  } else {
-    const now = new Date();
-    console.log('onWathNewLink::now=<',now.toUTCString(),'>');
-    console.log('wait 5 min for next loop ...');
-    setTimeout(()=> {
-      globalLoopIndex = 0;
-      readNews(globalLoopIndex);
-    },1000*60 * 5);
-  }
-}
-
-
-
-*/
 

@@ -3,8 +3,9 @@ const fs = require('fs');
 const gDBPath = '/watorvapor/wai.storage/wai.native.wator/db/zhizi/ja';
 const db_ = level(gDBPath,{ createIfMissing: false });
 const phrase_ = {};
-db_.createReadStream()
 let maxValue = 0.0; 
+
+db_.createReadStream()
 .on('data', (data) =>{
   //console.log('WaiTagBot::onSentence_ data=<',data,'>');
   let fValue = parseFloat(data.value);
@@ -18,8 +19,18 @@ let maxValue = 0.0;
 .on('close', () =>{
 })
 .on('end', (evt) =>{
-  console.log('maxValue=<',maxValue,'>');
-  //fs.writeFileSync('./wai.phrase.ja.json',JSON.stringify(phrase_,undefined,'  '),'utf8');
+  onDataFinnish();
 });
 
+const onDataFinnish = () => {
+  console.log('onDataFinnish::maxValue=<',maxValue,'>');
+  let fMaxValue = parseFloat(maxValue);
+  for(let key in phrase_) {
+    //console.log('onDataFinnish::key=<',key,'>');
+    let fValue = parseFloat(phrase_[key])/fMaxValue;
+    //console.log('onDataFinnish::fValue=<',fValue,'>');
+    phrase_[key] = fValue;
+  }
+  fs.writeFileSync('./wai.phrase.ja.json',JSON.stringify(phrase_,undefined,'  '),'utf8');
+}
 

@@ -18,15 +18,19 @@ const gPublisher = redis.createClient(redisOption);
 
 
 module.exports = class NewsPumper {
-  constructor(seed,dbPath,lang) {
+  constructor(seed,linkDBPath,dbTextContent,lang) {
     this.seed_ = seed;
-    this.dbPath_ = dbPath;
-    if (!fs.existsSync(dbPath)) {
-      fs.mkdirSync(dbPath,{ recursive: true });
+    this.linkDBPath_ = linkDBPath;
+    if (!fs.existsSync(linkDBPath)) {
+      fs.mkdirSync(linkDBPath,{ recursive: true });
     }
-    this.db_ = new LevelDFS(dbPath);
+    this.linkDB_ = new LevelDFS(linkDBPath);
     this.lang_ = lang;
     this.lastReadTime_ = new Date();
+    if (!fs.existsSync(dbTextContent)) {
+      fs.mkdirSync(dbTextContent,{ recursive: true });
+    }
+    this.textDBPath_ = dbTextContent;
   }
   turn() {
     this.globalLoopIndex_ = 0;
@@ -94,11 +98,11 @@ module.exports = class NewsPumper {
   onWatchLink_(href){
     //console.log('onWatchLink_::href=<',href,'>');
     let self = this;
-    this.db_.get(href, (err, value) => {
+    this.linkDB_.get(href, (err, value) => {
       //console.log('onWatchLink_::err=<',err,'>');
       if (err && err.notFound) {
         let contents = JSON.stringify({href:href,discover:true});
-        self.db_.put(href,contents);
+        self.linkDB_.put(href,contents);
         self.onWathNewLink_(href);
         return;
       }
@@ -109,7 +113,13 @@ module.exports = class NewsPumper {
     console.log('onWathNewLink_::href=<',href,'>');
     const now = new Date();
     console.log('onWathNewLink_::now=<',now.toUTCString(),'>');
-    gPublisher.publish(redisNewsChannelDiscovery, JSON.stringify({href:href,lang:this.lang_}));
+    let nextStage = {
+      href:href,
+      linkdb:this.dbPath_,
+      textdb:this.textDBPath_,
+      lang:this.lang_
+    }
+    gPublisher.publish(redisNewsChannelDiscovery, JSON.stringify(nextStage));
   }
 
   onCheckTaskRun_ () {

@@ -9,15 +9,7 @@ const redisOption = {
 };
 const redisNewsChannelDiscovery = 'redis.channel.news.discover.multi.lang';
 const gSubscriber = redis.createClient(redisOption);
-const Twitter = require('twitter');
-const clientTwitter = new Twitter({
-  consumer_key: 'cKcYfmC6niawGY7kLC9hGHafW',
-  consumer_secret: 'MZ5FP6BYItZOOLuciabtuwHyiHH78bqRb1HnrE3K4PK9obDM5l',
-  access_token_key: '2479678550-zBgOIqB81GtIQj99K6pyqbDlN0dqlJx8pbNCnVp',
-  access_token_secret: '7gxQyigISdvfjKNgQA6VCEIOtcZMSWDyGQs04rg2NgXXq'
-});
 
-let gLastPostTitterTime = new Date();
 
 const iConstSNSEscapeTime = 1000*1;
 
@@ -38,7 +30,12 @@ module.exports = class TagBot {
     **/
     this.wai_.onReady = () => {
       setTimeout(()=>{
-        let msg = {lang:'ja',href:'http://www.xinhuanet.com/politics/leaders/2019-07/22/c_1124785008.htm'};
+        let msg = {
+          lang:'ja',
+          href:'https://headlines.yahoo.co.jp/hl?a=20190805-00000106-kyodonews-int',
+          linkdb:'/watorvapor/ldfs/tagbot/ja/news_discovery_db',
+          textdb:'/watorvapor/ldfs/tagbot/ja/news_text_contents_db'
+        };
         self.onDiscoveryNewLink_(JSON.stringify(msg));
       },1000*2);
     }
@@ -113,45 +110,9 @@ module.exports = class TagBot {
     setTimeout(this.onLearnNewLink_.bind(this),1000);
   }
 
-
-
   postTwitter_ (myhref,tags){
     console.log('postTwitter::myhref=<',myhref,'>');
     console.log('postTwitter::tags=<',tags,'>');
-    let contents = '';
-    for(let tag of tags) {
-      contents += ' #' + tag.tag + '';
-    }
-    contents += '\n'
-    contents += '\n'
-    contents += '\n'
-    contents += myhref;
-    contents += '\n';
-    contents += '\n'
-    contents += '\n'
-    contents += '  请关注 https://www.wator.xyz  \n'
-    contents += '\n'
-    contents += '\n'
-    contents += '\n'
-    contents += '  请关注 https://www.wator.xyz/wai  \n'
-    contents += '\n'
-    contents += '\n'
-    contents += '\n'
-    const postObject = {status: contents};
-    console.log('postTwitter::postObject=<',postObject,'>');
-    let self = this;
-    clientTwitter.post('statuses/update', postObject, (error, tweets, response) => {
-      gLastPostTitterTime = new Date();;
-      if (error) {
-        console.log('postTwitter::error=<',error,'>');
-        setTimeout(self.onLearnNewLink_.bind(self),1000 * 60 * 5);
-        throw error;
-      }
-      setTimeout(self.onLearnNewLink_.bind(self),1000*60*5);
-      //console.log('postTwitter::tweets=<',tweets,'>');
-      //console.log('postTwitter::response=<',response,'>');
-    });
-  }
 }
 
 

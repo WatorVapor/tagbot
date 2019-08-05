@@ -6,27 +6,35 @@ class WaiTagBot extends WaiBase {
   constructor() {
     super();
     console.log('WaiTagBot::constructor start read...>');
-    let content = fs.readFileSync('./wai.phrase.json', 'utf8');
+    let content = fs.readFileSync('./wai.phrase.cn.json', 'utf8');
     console.log('WaiTagBot::constructor content.length=<',content.length,'>');
-    this.phrase_ = JSON.parse(content);
+    
+    this.phrase_ = {};
+    this.phrase_['cn'] = JSON.parse(content);
+    
+    content = fs.readFileSync('./wai.phrase.ja.json', 'utf8');
+    console.log('WaiTagBot::constructor content.length=<',content.length,'>');
+    this.phrase_['ja'] = JSON.parse(content);
+    
     setTimeout(()=> {
       if(typeof this.onReady === 'function') {
         this.onReady();
       }      
     },1000);
   }
-  article(doc) {
+  article(doc,lang) {
     this.wordFreqs_ = {};
     this.tbdWords_ = {};
-    super.article(doc,this.onSentence_.bind(this));
+    //console.log('WaiTagBot::article lang=<',lang,'>');
+    super.article(doc,lang,this.onSentence_.bind(this));
     //console.log('WaiTagBot::article this.tbdWords_=<',this.tbdWords_,'>');
     //console.log('WaiTagBot::article this.wordFreqs_=<',this.wordFreqs_,'>');
     const pureCollect = super.FilterOutInside_(this.wordFreqs_);
     //console.log('WaiTagBot::article pureCollect=<',pureCollect,'>');
-    return this.calcWeight_(pureCollect);
+    return this.calcWeight_(pureCollect,lang);
   } 
   //
-  onSentence_(sentence) {
+  onSentence_(sentence,lang) {
     //console.log('WaiTagBot::onSentence_ sentence=<',sentence,'>');
     for(let i = 0 ;i < sentence.length;i++) {
       let utf8 = sentence[i];
@@ -46,9 +54,10 @@ class WaiTagBot extends WaiBase {
           let concat = sentence.slice(start,i+1);
           let word = concat.join('');
           //console.log('WaiTagBot::onSentence_ word=<',word,'>');
-          if(this.phrase_[word]) {
+          //console.log('WaiTagBot::onSentence_ lang=<',lang,'>');
+          if(this.phrase_[lang][word]) {
             //console.log('WaiTagBot::onSentence_ word=<',word,'>');
-            this.tbdWords_[word] = this.phrase_[word];
+            this.tbdWords_[word] = this.phrase_[lang][word];
             if(this.wordFreqs_[word]) {
               this.wordFreqs_[word]++;
             } else {
@@ -60,11 +69,11 @@ class WaiTagBot extends WaiBase {
     }
   }
   
-  calcWeight_(collect) {
+  calcWeight_(collect,lang) {
     let weights = [];
     for(let word in collect) {
       //console.log('WaiTagBot::calcWeight_ word=<',word.length,'>');
-      let probability = this.phrase_[word];
+      let probability = this.phrase_[lang][word];
       let freq = collect[word];
       //console.log('WaiTagBot::calcWeight_ freq=<',freq,'>');
       //sortedCollect.push({w:word,freq:collect[word]})

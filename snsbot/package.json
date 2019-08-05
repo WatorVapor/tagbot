@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ripemd160": "^2.0.2",
+    "base64-url": "^2.2.2",
     "redis": "^2.8.0",
     "twitter": "^1.7.1"
   }

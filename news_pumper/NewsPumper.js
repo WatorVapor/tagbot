@@ -115,7 +115,7 @@ module.exports = class NewsPumper {
     console.log('onWathNewLink_::now=<',now.toUTCString(),'>');
     let nextStage = {
       href:href,
-      linkdb:this.dbPath_,
+      linkdb:this.linkDBPath_,
       textdb:this.textDBPath_,
       lang:this.lang_
     }

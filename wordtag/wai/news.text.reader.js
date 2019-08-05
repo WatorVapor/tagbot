@@ -8,16 +8,17 @@ const gFiltOutList = [
 ];
 
 module.exports = class NewsTextReader {
-  constructor(path) {
+  constructor(path,lang) {
     this._path = path;
+    this.lang_ = lang;
     if (!fs.existsSync(path)) {
       fs.mkdirSync(path,{ recursive: true });
     }
   }
   fetch(href,cb) {
     console.log('fetch::href=<',href,'>');
-    this.cb_ = cb;
     this.href_ = href;
+    this.cb_ = cb;
     if(href.startsWith('https://')) {
       const req = https.get(href,{timeout:1000*32},this.onHttpRequest_.bind(this)).on("error", (err) => {
         console.log('fetch::err=<',err,'>');
@@ -51,7 +52,7 @@ module.exports = class NewsTextReader {
     this.chouText_(bodyElem);
     //console.log('onHttpBody_::this.bodyText_=<',this.bodyText_,'>');
     if(typeof this.cb_ === 'function') {
-      typeof this.cb_(this.bodyText_,this.href_);
+      typeof this.cb_(this.bodyText_,this.href_,this.lang_);
     }
     //fs.writeFileSync('./temp.text.txt',this.bodyText_ , 'utf-8');
   }

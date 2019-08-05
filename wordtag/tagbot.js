@@ -10,6 +10,11 @@ const redisOption = {
 const redisNewsChannelDiscovery = 'redis.channel.news.discover.multi.lang';
 const gSubscriber = redis.createClient(redisOption);
 
+const redisNewsChannelSNSBot = 'redis.channel.news.discover.multi.lang.snsbot';
+const gPublish = redis.createClient(redisOption);
+
+const NewsTextReader = require('./wai/news.text.reader.js');
+
 
 const iConstSNSEscapeTime = 1000*1;
 
@@ -48,14 +53,6 @@ module.exports = class TagBot {
     setTimeout(this.onLearnNewLink_.bind(this),1000);
   }
   onLearnNewLink_ () {
-    const now = new Date();
-    const escape = now - gLastPostTitterTime;
-    if(escape < iConstSNSEscapeTime){
-      console.log('onLearnNewLink_:: too busy this.gNewLinks_=<',this.gNewLinks_,'>');
-      console.log('onLearnNewLink_:: escape=<',escape,'>');
-      console.log('onLearnNewLink_:: now=<',now.toUTCString(),'>');
-      return;
-    }
     if(this.gNewLinks_.length < 1) {
       console.log('onLearnNewLink_:: this.gNewLinks_=<',this.gNewLinks_,'>');
       return;
@@ -68,9 +65,7 @@ module.exports = class TagBot {
     this.gNewLinks_.splice(-1);
     console.log('onLearnNewLink_:: this.gNewLinks_=<',this.gNewLinks_,'>');
     let self = this;
-    let dbPath = '/watorvapor/ldfs/tagbot/' + lang + '/news_discovery_db';
-    console.log('onLearnNewLink_:: dbPath=<',dbPath,'>');
-    let db = new LevelDFS(dbPath);
+    let db = new LevelDFS(msgJson.linkdb);
     db.get(href, (err, value) => {
       if(err) {
          console.log('onLearnNewLink_::err=<',err,'>');
@@ -79,40 +74,49 @@ module.exports = class TagBot {
       console.log('onLearnNewLink_::value=<',value,'>');
       try {
         const valueJson = JSON.parse(value);
-        if(valueJson.twitter) {
+        /*
+        if(valueJson.wordtag) {
           setTimeout(self.onLearnNewLink_.bind(self),1000);
           return;
         }
-        valueJson.twitter = true;
+        */
+        valueJson.wordtag = true;
         let contents = JSON.stringify(valueJson);
         db.put(href,contents);
       }
       catch(e) {
-        console.log('onLearnNewLink::e=<',e,'>');
-        let contents = JSON.stringify({href:href,discover:true,twitter:true});
+        console.log('onLearnNewLink_::e=<',e,'>');
+        let contents = JSON.stringify({
+          href:href,
+          discover:true,
+          wordtag:true}
+        );
         db.put(href,contents);
       }
-      const txtReader = new NewsTextReader(self.textdb_);
-      txtReader.fetch(href,(txt,myhref)=>{
-        self.onNewsText_(txt,myhref);
+      const txtReader = new NewsTextReader(msgJson.textdb,msgJson.lang);
+      txtReader.fetch(href,(txt,myhref,myLang)=>{
+        self.onNewsText_(txt,myhref,myLang,msgJson);
       });
     });
   }
-  onNewsText_(txt,myhref) {
+  onNewsText_(txt,myhref,myLang,msgJson) {
     //console.log('onNewsText::txt=<',txt,'>');
     //console.log('onNewsText::myhref=<',myhref,'>');
-    let tags = wai.article(txt);
+    let tags = this.wai_.article(txt,myLang);
     //console.log('onNewsText::tags=<',tags,'>');
     if(tags.length > 8) {
-      this.postTwitter_(myhref,tags);
+      this.postSNS_(tags,msgJson);
       return;
     }
     setTimeout(this.onLearnNewLink_.bind(this),1000);
   }
 
-  postTwitter_ (myhref,tags){
-    console.log('postTwitter::myhref=<',myhref,'>');
-    console.log('postTwitter::tags=<',tags,'>');
+  postSNS_ (tags,msgJson){
+    //console.log('postSNS_::tags=<',tags,'>');
+    msgJson.tags = tags;
+    console.log('postSNS_::msgJson=<',msgJson,'>');
+    gPublish.publish(redisNewsChannelSNSBot,JSON.stringify(msgJson));
+  }
 }
 
 

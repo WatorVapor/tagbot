@@ -1,15 +1,35 @@
 version: '3'
 services:
-  pumper:
+  pumper-cn:
     image: node:lts
     volumes:
       - ./news_pumper:/home/app
-      - /watorvapor/ldfs/tagbot/news_discovery_db:/watorvapor/ldfs/tagbot/news_discovery_db
+      - /watorvapor/ldfs/tagbot:/watorvapor/ldfs/tagbot
     working_dir: "/home/app"
     environment:
       - MMAX=1G 
       - ISDOCKER=true 
-    command: node app.js
+    command: node appCN.js
+    networks:
+      - outside
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+  pumper-ja:
+    image: node:lts
+    volumes:
+      - ./news_pumper:/home/app
+      - /watorvapor/ldfs/tagbot:/watorvapor/ldfs/tagbot
+    working_dir: "/home/app"
+    environment:
+      - MMAX=1G 
+      - ISDOCKER=true 
+    command: node appJA.js
     networks:
       - outside
     deploy:
@@ -24,8 +44,27 @@ services:
     image: node:lts
     volumes:
       - ./wordtag:/home/app
-      - /watorvapor/wai.storage/wai.native.wator/db/zhizi/cn.cast:/watorvapor/wai.storage/wai.native.wator/db/zhizi/cn.cast
-      - /watorvapor/ldfs/tagbot/news_discovery_db:/watorvapor/ldfs/tagbot/news_discovery_db
+      - /watorvapor/ldfs/tagbot:/watorvapor/ldfs/tagbot
+    working_dir: "/home/app"
+    environment:
+      - MMAX=1G 
+      - ISDOCKER=true 
+    command: node appML.js
+    networks:
+      - outside
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+  snsbot:
+    image: node:lts
+    volumes:
+      - ./snsbot:/home/app
+      - /watorvapor/ldfs/tagbot:/watorvapor/ldfs/tagbot
     working_dir: "/home/app"
     environment:
       - MMAX=1G 

@@ -7,7 +7,7 @@ class WaiBase {
     
   } 
   
-  article(doc,onSentence) {
+  article(doc,lang,onSentence) {
     let aDocumentStatistics = {};
     //console.log('article doc=<',doc,'>');
     let cjkCollect = [];
@@ -31,7 +31,7 @@ class WaiBase {
     }  
     //console.log('article cjkCollect=<',cjkCollect,'>');
     for(let i = 0 ;i < cjkCollect.length;i++) {
-      onSentence(cjkCollect[i],aDocumentStatistics);
+      onSentence(cjkCollect[i],lang,aDocumentStatistics);
     }
     if(aDocumentStatistics) {
       //console.log('article aDocumentStatistics=<',aDocumentStatistics,'>');

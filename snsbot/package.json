@@ -1,5 +1,5 @@
 {
-  "name": "wordtag",
+  "name": "snsbot",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "redis": "^2.8.0"
+    "redis": "^2.8.0",
     "twitter": "^1.7.1"
   }
 }

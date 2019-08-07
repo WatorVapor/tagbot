@@ -71,12 +71,12 @@ class WaiCutter {
       //console.log('WaiCutter article this.delegate_.onSentence_=<',this.delegate_.onSentence_,'>');
       if(sentence.cjk) {
         //onSentence(cjkCollect[i],lang,aDocumentStatistics);
-        this.onCJK_(sentence.cjk);
+        this.onCJK_(sentence.cjk,lang);
       }
       if(sentence.noCjk) {
         //onSentence(cjkCollect[i],lang,aDocumentStatistics);
         //console.log('WaiCutter article sentence=<',sentence,'>');
-        this.onNoCJK_(sentence.noCjk);
+        this.onNoCJK_(sentence.noCjk,lang);
       }
     }
     /*
@@ -92,7 +92,7 @@ class WaiCutter {
     */
   }
   
-  onCJK_(sentence) {
+  onCJK_(sentence,lang) {
     //console.log('WaiCutter onCJK_ sentence=<',sentence,'>');
     for(let i = 0 ;i < sentence.length;i++) {
       let utf8 = sentence[i];
@@ -106,25 +106,25 @@ class WaiCutter {
         if(start >= 0) {
           let concat = sentence.slice(start,i+1);
           let word = concat.join('');
-          this.delegate_.onCJKWordRC_(word);
+          this.delegate_.onCJKWordRC_(word,lang);
         }
       }
     }
   }
 
-  onNoCJK_(sentence) {
+  onNoCJK_(sentence,lang) {
     //console.log('WaiCutter onNoCJK_ sentence=<',sentence,'>');
     let word = '';
     for(let utf8 of sentence) {
       if(utf8 === ' ' && word.trim()) {
-        this.delegate_.onNoCJKWord_(word);
+        this.delegate_.onNoCJKWord_(word,lang);
         word = '';
       } else {
         word += utf8;
       }
     }
     if(word.trim()) {
-      this.delegate_.onNoCJKWord_(word);
+      this.delegate_.onNoCJKWord_(word,lang);
     }
   }
 
@@ -170,7 +170,6 @@ class WaiCutter {
     }
     return outCollect;
   }
-
 }
 
 module.exports = WaiCutter;

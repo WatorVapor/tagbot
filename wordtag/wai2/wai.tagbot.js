@@ -1,10 +1,11 @@
 const WaiCutter = require('./wai.cutter.js');
 const fs = require('fs');
+const gFilterKeyWords = require('./wai.tagbot.filter.js');
 
 class WaiTagBot {
   constructor() {
     this.cutter_ = new WaiCutter(this)
-    /*
+    
     console.log('WaiTagBot::constructor start read...>');
     let content = fs.readFileSync('./wai.phrase.cn.json', 'utf8');
     console.log('WaiTagBot::constructor content.length=<',content.length,'>');
@@ -15,7 +16,7 @@ class WaiTagBot {
     content = fs.readFileSync('./wai.phrase.ja.json', 'utf8');
     console.log('WaiTagBot::constructor content.length=<',content.length,'>');
     this.phrase_['ja'] = JSON.parse(content);
-    */
+    
     
     setTimeout(()=> {
       if(typeof this.onReady === 'function') {
@@ -32,7 +33,8 @@ class WaiTagBot {
     //console.log('WaiTagBot::article this.wordFreqs_=<',this.wordFreqs_,'>');
     const pureCollect = this.cutter_.FilterOutInside_(this.wordFreqs_);
     //console.log('WaiTagBot::article pureCollect=<',pureCollect,'>');
-    return this.calcWeight_(pureCollect,lang);
+    const goodCollect = this.FilterOutKeyWord_(pureCollect);
+    return this.calcWeight_(goodCollect,lang);
   }
   //
   onSeparator_(sep) {
@@ -42,50 +44,22 @@ class WaiTagBot {
   onFinishSentence_() {
     
   }
-  onNoCJKWord_(word) {
+  onNoCJKWord_(word,lang) {
     //console.log('WaiTagBot::onNoCJKWord_ word=<',word,'>');
   }
 
-  onCJKWordRC_(word) {
-    console.log('WaiTagBot::onCJKWordRC_ word=<',word,'>');
-  }
-
-  
-  onSentence__(sentence,lang) {
-    //console.log('WaiTagBot::onSentence_ sentence=<',sentence,'>');
-    for(let i = 0 ;i < sentence.length;i++) {
-      let utf8 = sentence[i];
-      //console.log('WaiTagBot::onSentence_ utf8=<',utf8,'>');
-      let backIndex = i;
-      if(backIndex > iConstNGramMaxWindow) {
-        backIndex = iConstNGramMaxWindow;
-      }
-      /*
-      if(this.phrase_[utf8]) {
-        console.log('WaiTagBot::onSentence_ utf8=<',utf8,'>');
-      }
-      */
-      for(let j = 1 ;j <= backIndex;j++) {
-        let start = i - j ;
-        if(start >= 0) {
-          let concat = sentence.slice(start,i+1);
-          let word = concat.join('');
-          //console.log('WaiTagBot::onSentence_ word=<',word,'>');
-          //console.log('WaiTagBot::onSentence_ lang=<',lang,'>');
-          if(this.phrase_[lang][word]) {
-            //console.log('WaiTagBot::onSentence_ word=<',word,'>');
-            this.tbdWords_[word] = this.phrase_[lang][word];
-            if(this.wordFreqs_[word]) {
-              this.wordFreqs_[word]++;
-            } else {
-              this.wordFreqs_[word] = 1;
-            }
-          }
-        }
+  onCJKWordRC_(word,lang) {
+    //console.log('WaiTagBot::onCJKWordRC_ word=<',word,'>');
+    if(this.phrase_[lang][word]) {
+      this.tbdWords_[word] = this.phrase_[lang][word];
+      if(this.wordFreqs_[word]) {
+        this.wordFreqs_[word]++;
+      } else {
+        this.wordFreqs_[word] = 1;
       }
     }
   }
-  
+
   calcWeight_(collect,lang) {
     let weights = [];
     for(let word in collect) {
@@ -105,9 +79,23 @@ class WaiTagBot {
       if(a.weight < b.weight) return 1;
       return 0;
     });
-    //console.log('WaiTagBot::calcWeight_ weights=<',weights,'>');
+    console.log('WaiTagBot::calcWeight_ weights=<',weights,'>');
     return weights.slice(0, 21);
   }
+
+  FilterOutKeyWord_ (collect) {
+    let outCollect = JSON.parse(JSON.stringify(collect));
+    let keys = Object.keys(outCollect);
+    for(let i = 0 ;i < keys.length;i++) {
+      let key = keys[i];
+      //console.log('FilterOutInside_ key=<',key,'>');
+      if(gFilterKeyWords.indexOf(key) !== -1) {
+        delete outCollect[key];
+      }
+    }
+    return outCollect;
+  }
+
 }
 
 module.exports = WaiTagBot;

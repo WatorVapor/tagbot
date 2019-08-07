@@ -43,7 +43,11 @@ class WaiTagBot {
     
   }
   onNoCJKWord_(word) {
-    console.log('WaiTagBot::onNoCJKWord_ word=<',word,'>');
+    //console.log('WaiTagBot::onNoCJKWord_ word=<',word,'>');
+  }
+
+  onCJKWordRC_(word) {
+    console.log('WaiTagBot::onCJKWordRC_ word=<',word,'>');
   }
 
   

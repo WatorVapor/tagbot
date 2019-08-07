@@ -94,6 +94,22 @@ class WaiCutter {
   
   onCJK_(sentence) {
     //console.log('WaiCutter onCJK_ sentence=<',sentence,'>');
+    for(let i = 0 ;i < sentence.length;i++) {
+      let utf8 = sentence[i];
+      //console.log('WaiCutter::onCJK_ utf8=<',utf8,'>');
+      let backIndex = i;
+      if(backIndex > iConstNGramMaxWindow) {
+        backIndex = iConstNGramMaxWindow;
+      }
+      for(let j = 1 ;j <= backIndex;j++) {
+        let start = i - j ;
+        if(start >= 0) {
+          let concat = sentence.slice(start,i+1);
+          let word = concat.join('');
+          this.delegate_.onCJKWordRC_(word);
+        }
+      }
+    }
   }
 
   onNoCJK_(sentence) {

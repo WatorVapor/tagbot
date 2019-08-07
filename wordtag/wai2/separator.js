@@ -71,6 +71,9 @@ const Separator_Table =
  '"':true,
  '–':true,
  '～':true,
+ '．':true,
+ '~':true,
+ '=':true,
 
 }
 module.exports = Separator_Table;

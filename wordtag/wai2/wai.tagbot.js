@@ -42,6 +42,10 @@ class WaiTagBot {
   onFinishSentence_() {
     
   }
+  onNoCJKWord_(word) {
+    console.log('WaiTagBot::onNoCJKWord_ word=<',word,'>');
+  }
+
   
   onSentence__(sentence,lang) {
     //console.log('WaiTagBot::onSentence_ sentence=<',sentence,'>');

@@ -1,6 +1,9 @@
 const WaiCutter = require('./wai.cutter.js');
 const fs = require('fs');
-const gFilterKeyWords = require('./wai.tagbot.filter.js');
+const gFilterKeyWordsCN = require('./wai.tagbot.filter.cn.js');
+const gFilterKeyWordsJA = require('./wai.tagbot.filter.ja.js')
+gFilterKeyWords = gFilterKeyWordsCN.concat(gFilterKeyWordsJA);
+//console.log(':: gFilterKeyWords=<',gFilterKeyWords,'>');
 
 class WaiTagBot {
   constructor() {
@@ -79,7 +82,7 @@ class WaiTagBot {
       if(a.weight < b.weight) return 1;
       return 0;
     });
-    console.log('WaiTagBot::calcWeight_ weights=<',weights,'>');
+    //console.log('WaiTagBot::calcWeight_ weights=<',weights,'>');
     return weights.slice(0, 21);
   }
 

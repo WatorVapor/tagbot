@@ -1,4 +1,4 @@
-const WaiTagBot = require('./wai/wai.tagbot.js');
+const WaiTagBot = require('./wai2/wai.tagbot.js');
 const LevelDFS = require('./LevelDFS.js');
 //console.log('::LevelDFS=<',LevelDFS,'>');
 const redis = require('redis');
@@ -13,7 +13,7 @@ const gSubscriber = redis.createClient(redisOption);
 const redisNewsChannelSNSBot = 'redis.channel.news.discover.multi.lang.snsbot';
 const gPublish = redis.createClient(redisOption);
 
-const NewsTextReader = require('./wai/news.text.reader.js');
+const NewsTextReader = require('./wai2/news.text.reader.js');
 
 
 const iConstSNSEscapeTime = 1000*1;

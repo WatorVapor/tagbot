@@ -24,6 +24,9 @@ module.exports = class LevelDFS {
       cb();
     }
   }
+  putSync(key,content) {
+    this.put(key,content);
+  }
   
   get(key,cb) {
     let keyAddress = this.getKeyAddress_(key);
@@ -41,6 +44,15 @@ module.exports = class LevelDFS {
     }
   }
   
+  getSync(key) {
+    let keyAddress = this.getKeyAddress_(key);
+    //console.log('LevelDFS::get: keyAddress=<',keyAddress,'>');
+    if (fs.existsSync(keyAddress)) {
+      let content = fs.readFileSync(keyAddress, 'utf8');
+      return content;
+    }
+    return null;
+  }  
   
   getKeyAddress_(key) {
     const hash = crypto.createHash('sha256');

@@ -16,6 +16,11 @@ const goo = require('./seed/jp.ne.goo.js');
 for(let url of goo.seeds) {
   requestList.push(url);
 }
+const google = require('./seed/news.google.ja.js');
+for(let url of google.seeds) {
+  requestList.push(url);
+}
+
 console.log('requestList=<',requestList,'>');
 const NewsPumper = require('./NewsPumper.js');
 const dbLink = '/watorvapor/ldfs/tagbot/ja/news_discovery_db';

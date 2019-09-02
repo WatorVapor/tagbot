@@ -15,10 +15,11 @@ gSubscriber.subscribe(redisChannelSnsBot);
 
 const gNewLinks = [];
 let gISRunning = false;
+const gNewLinksCachMax = 100;
 
 const onNewTags = (channel,msg) => {
   gNewLinks.push(msg);
-  if(gNewLinks.length > 5) {
+  if(gNewLinks.length > gNewLinksCachMax) {
     gNewLinks.shift();
   }
   if(gISRunning === false) {

@@ -39,6 +39,7 @@ const onPostNewTags = () => {
   const now = new Date();
   const escape_time = now - gLastPostTitterTime;
   if(escape_time < 1000*60) {
+    console.log('onPostNewTags:: escape_time=<',escape_time,'> too short!!!');
     return;
   }
   let msg = gNewLinks[gNewLinks.length -1];

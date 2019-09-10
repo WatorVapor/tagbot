@@ -9,13 +9,21 @@ const LevelDFS = require('./LevelDFS.js');
 const redis = require('redis');
 const redisOption = {
   host:'node2.ceph.wator.xyz',
-  port:6379,
+  port:16379,
+  password:'QfIvXWQCxnTZlEpT',
   family:'IPv6'
 };
 const redisNewsChannelDiscovery = 'redis.channel.news.discover.multi.lang';
 const gPublisher = redis.createClient(redisOption);
-
-
+gPublisher.on('error', (err) => {
+    console.log('gPublisher error::err=<',err,'>');
+});
+gPublisher.on('ready', (evt) => {
+    console.log('gPublisher ready ::evt=<',evt,'>');
+});
+gPublisher.on('end', (evt) => {
+    console.log('gPublisher end ::evt=<',evt,'>');
+});
 
 module.exports = class NewsPumper {
   constructor(seed,linkDBPath,dbTextContent,lang) {

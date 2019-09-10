@@ -4,7 +4,8 @@ const LevelDFS = require('./LevelDFS.js');
 const redis = require('redis');
 const redisOption = {
   host:'node2.ceph.wator.xyz',
-  port:6379,
+  port:16379,
+  password:'QfIvXWQCxnTZlEpT',
   family:'IPv6'
 };
 const redisNewsChannelDiscovery = 'redis.channel.news.discover.multi.lang';
@@ -69,7 +70,9 @@ module.exports = class TagBot {
     db.get(href, (err, value) => {
       if(err) {
          console.log('onLearnNewLink_::err=<',err,'>');
-        throw err;
+         console.log('onLearnNewLink_::msgJson.linkdb=<',msgJson.linkdb,'>');
+         console.log('onLearnNewLink_::value=<',value,'>');
+         return;
       }
       console.log('onLearnNewLink_::value=<',value,'>');
       try {

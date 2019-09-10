@@ -1,7 +1,8 @@
 const redis = require('redis');
 const redisOption = {
   host:'node2.ceph.wator.xyz',
-  port:6379,
+  port:16379,
+  password:'QfIvXWQCxnTZlEpT',
   family:'IPv6'
 };
 const redisChannelSnsBot = 'redis.channel.news.discover.multi.lang.snsbot';
@@ -28,10 +29,16 @@ const onNewTags = (channel,msg) => {
 }
 
 const LevelDFS = require('./LevelDFS.js');
+let gLastPostTitterTime = new Date();
 
 const onPostNewTags = () => {
   if(gNewLinks.length < 1) {
     console.log('onPostNewTags:: gNewLinks=<',gNewLinks,'>');
+    return;
+  }
+  const now = new Date();
+  const escape_time = now - gLastPostTitterTime;
+  if(escape_time < 1000*60) {
     return;
   }
   let msg = gNewLinks[gNewLinks.length -1];
@@ -64,7 +71,6 @@ const onPostNewTags = () => {
 }
 
 
-let gLastPostTitterTime = new Date();
 const Twitter = require('twitter');
 const clientTwitter = new Twitter({
   consumer_key: 'cKcYfmC6niawGY7kLC9hGHafW',
@@ -108,7 +114,7 @@ const  postTwitter = (msgJson) => {
       setTimeout(onPostNewTags,1000 * 60 * 5);
       throw error;
     }
-    setTimeout(onPostNewTags.bind(self),1000*60*5);
+    setTimeout(onPostNewTags.bind(self),1000*60*1);
     //console.log('postTwitter::tweets=<',tweets,'>');
     //console.log('postTwitter::response=<',response,'>');
   });

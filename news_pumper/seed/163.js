@@ -1,1 +1,3 @@
-https://news.163.com/
+module.exports.seeds = [
+  'https://news.163.com/',
+];

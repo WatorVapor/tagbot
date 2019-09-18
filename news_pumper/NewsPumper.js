@@ -30,7 +30,7 @@ module.exports = class NewsPumper {
   constructor(seed,linkDBPath,dbTextContent,lang) {
     this.seed_ = seed;
     console.log('NewsPumper constructor::seed=<',seed,'>');
-    const urlSeed = url.parse(seed, true);
+    const urlSeed = url.parse(seed);
     console.log('NewsPumper constructor::urlSeed=<',urlSeed,'>');
     this.linkDBPath_ = linkDBPath;
     if (!fs.existsSync(linkDBPath)) {

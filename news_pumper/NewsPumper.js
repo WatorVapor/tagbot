@@ -61,7 +61,7 @@ module.exports = class NewsPumper {
         body += chunk;
       });
       resp.on('end', () => {
-        console.log('readNews_::req.url=<',req.url,'>');
+        console.log('readNews_::resp.socket=<',resp.socket,'>');
         self.onHttpBody_(body);
       });      
     }).on("error", (err) => {

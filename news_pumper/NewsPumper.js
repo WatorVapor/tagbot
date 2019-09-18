@@ -29,6 +29,8 @@ gPublisher.on('end', (evt) => {
 module.exports = class NewsPumper {
   constructor(seed,linkDBPath,dbTextContent,lang) {
     this.seed_ = seed;
+    const urlSeed = url.parse(seed, true);
+    console.log('NewsPumper constructor::urlSeed=<',urlSeed,'>');
     this.linkDBPath_ = linkDBPath;
     if (!fs.existsSync(linkDBPath)) {
       fs.mkdirSync(linkDBPath,{ recursive: true });

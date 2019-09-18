@@ -66,13 +66,13 @@ module.exports = class NewsPumper {
       });
       resp.on('end', () => {
         //console.log('readNews_::resp.socket=<',resp.socket,'>');
-        self.onHttpBody_(body,rootPath);
+        self.onHttpBody_(body,rootPath,seedURL.protocol);
       });      
     }).on("error", (err) => {
       console.log('readNews_::err=<',err,'>');
     });
   }
-  onHttpBody_(body,rootPath) {
+  onHttpBody_(body,rootPath,protocol) {
     const $ = cheerio.load(body);
     let link = $('a');
     //console.log('onHttpBody_::link=<',link,'>');
@@ -88,6 +88,11 @@ module.exports = class NewsPumper {
         if(href.startsWith('http://') || href.startsWith('https://')) {
           //console.log('onHttpBody_::href=<',href,'>');
           this.onWatchLink_(href);
+        } else if(href.startsWith('//')) {
+          console.log('onHttpBody_::href=<',href,'>');
+          const completeHref = protocol  + href;
+          console.log('onHttpBody_::completeHref=<',completeHref,'>');
+          this.onWatchLink_(completeHref);
         } else if(href.startsWith('/')) {
           //console.log('onHttpBody_::rootPath=<',rootPath,'>');
           //console.log('onHttpBody_::href=<',href,'>');

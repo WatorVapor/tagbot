@@ -29,9 +29,6 @@ gPublisher.on('end', (evt) => {
 module.exports = class NewsPumper {
   constructor(seed,linkDBPath,dbTextContent,lang) {
     this.seed_ = seed;
-    console.log('NewsPumper constructor::seed=<',seed,'>');
-    const urlSeed = url.parse(seed);
-    console.log('NewsPumper constructor::urlSeed=<',urlSeed,'>');
     this.linkDBPath_ = linkDBPath;
     if (!fs.existsSync(linkDBPath)) {
       fs.mkdirSync(linkDBPath,{ recursive: true });
@@ -64,6 +61,7 @@ module.exports = class NewsPumper {
         body += chunk;
       });
       resp.on('end', () => {
+        console.log('readNews_::resp=<',resp,'>');
         self.onHttpBody_(body);
       });      
     }).on("error", (err) => {

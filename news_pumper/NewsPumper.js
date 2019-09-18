@@ -82,8 +82,10 @@ module.exports = class NewsPumper {
         if(href.startsWith('http://') || href.startsWith('https://')) {
           //console.log('onHttpBody_::href=<',href,'>');
           this.onWatchLink_(href);
-        } else {
+        } else if(href.startsWith('/')) {
           console.log('onHttpBody_::href=<',href,'>');
+        else {
+          //console.log('onHttpBody_::href=<',href,'>');
         }
       }
     }

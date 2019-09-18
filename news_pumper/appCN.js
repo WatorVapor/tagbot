@@ -20,7 +20,11 @@ const netease = require('./seed/163.js');
 for(let url of netease.seeds) {
   requestList.push(url);
 }
-
+const sina = require('./seed/sina.js');
+//console.log('sina=<',sina,'>');
+for(let url of sina.seeds) {
+  requestList.push(url);
+}
 
 
 

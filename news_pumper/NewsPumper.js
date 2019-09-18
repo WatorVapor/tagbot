@@ -92,7 +92,7 @@ module.exports = class NewsPumper {
           //console.log('onHttpBody_::rootPath=<',rootPath,'>');
           //console.log('onHttpBody_::href=<',href,'>');
           const completeHref = rootPath + href;
-          console.log('onHttpBody_::completeHref=<',completeHref,'>');
+          //console.log('onHttpBody_::completeHref=<',completeHref,'>');
           this.onWatchLink_(completeHref);
         } else {
           //console.log('onHttpBody_::href=<',href,'>');

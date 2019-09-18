@@ -66,7 +66,7 @@ module.exports = class NewsPumper {
       });
       resp.on('end', () => {
         //console.log('readNews_::resp.socket=<',resp.socket,'>');
-        self.onHttpBody_(body);
+        self.onHttpBody_(body,rootPath);
       });      
     }).on("error", (err) => {
       console.log('readNews_::err=<',err,'>');
@@ -90,7 +90,7 @@ module.exports = class NewsPumper {
           this.onWatchLink_(href);
         } else if(href.startsWith('/')) {
           console.log('onHttpBody_::rootPath=<',rootPath,'>');
-          console.log('onHttpBody_::this.seed_=<',this.seed_,'>');
+          console.log('onHttpBody_::href=<',href,'>');
           
         } else {
           //console.log('onHttpBody_::href=<',href,'>');

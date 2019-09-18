@@ -1,7 +1,7 @@
 const requestList = [];
 
-const itmedia = require('./seed/news.google.ja.js');
-for(let url of itmedia.seeds) {
+const goo = require('./seed/jp.ne.goo.js');
+for(let url of goo.seeds) {
   requestList.push(url);
 }
 console.log('requestList=<',requestList,'>');

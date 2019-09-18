@@ -54,14 +54,17 @@ module.exports = class NewsPumper {
   readNews_(){
     this.lastReadTime_ = new Date();
     let self = this;
-    const req = https.get(this.seed_[this.globalLoopIndex_],{timeout:1000*5},(resp)=> {
+    const newsURLStr = this.seed_[this.globalLoopIndex_];
+    const seedURL = url.parse(newsURLStr);
+    console.log('readNews_::seedURL=<',seedURL,'>');
+    const req = https.get(newsURLStr,{timeout:1000*5},(resp)=> {
       resp.setEncoding('utf8');
       let body = '';
       resp.on('data', (chunk) => {
         body += chunk;
       });
       resp.on('end', () => {
-        console.log('readNews_::resp.socket=<',resp.socket,'>');
+        //console.log('readNews_::resp.socket=<',resp.socket,'>');
         self.onHttpBody_(body);
       });      
     }).on("error", (err) => {

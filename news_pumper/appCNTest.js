@@ -1,7 +1,7 @@
 const requestList = [];
 
 const sina = require('./seed/sina.js');
-for(let url of goo.sina) {
+for(let url of sina.seeds) {
   requestList.push(url);
 }
 console.log('requestList=<',requestList,'>');

@@ -56,7 +56,8 @@ module.exports = class NewsPumper {
     let self = this;
     const newsURLStr = this.seed_[this.globalLoopIndex_];
     const seedURL = url.parse(newsURLStr);
-    console.log('readNews_::seedURL=<',seedURL,'>');
+    const rootPath = seedURL.protocol + '//' + seedURL.hostname;
+    console.log('readNews_::rootPath=<',rootPath,'>');
     const req = https.get(newsURLStr,{timeout:1000*5},(resp)=> {
       resp.setEncoding('utf8');
       let body = '';
@@ -71,7 +72,7 @@ module.exports = class NewsPumper {
       console.log('readNews_::err=<',err,'>');
     });
   }
-  onHttpBody_(body) {
+  onHttpBody_(body,rootPath) {
     const $ = cheerio.load(body);
     let link = $('a');
     //console.log('onHttpBody_::link=<',link,'>');
@@ -88,7 +89,7 @@ module.exports = class NewsPumper {
           //console.log('onHttpBody_::href=<',href,'>');
           this.onWatchLink_(href);
         } else if(href.startsWith('/')) {
-          console.log('onHttpBody_::href=<',href,'>');
+          console.log('onHttpBody_::rootPath=<',rootPath,'>');
           console.log('onHttpBody_::this.seed_=<',this.seed_,'>');
           
         } else {

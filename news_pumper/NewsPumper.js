@@ -106,14 +106,17 @@ module.exports = class NewsPumper {
     }
     if(this.globalLoopIndex_ < this.globalLoopIndex_.length) {
       this.globalLoopIndex_++;
-      this.readNews_();
+      let self = this;
+      setTimeout(()=> {
+        self.readNews_();
+      },1000);
     } else {
       const now = new Date();
       console.log('onHttpBody_::now=<',now.toUTCString(),'>');
       console.log('wait 5 min for next loop ...');
       let self = this;
       setTimeout(()=> {
-        this.globalLoopIndex_ = 0;
+        self.globalLoopIndex_ = 0;
         self.readNews_();
       },1000*60 * 5);
     }

@@ -83,7 +83,7 @@ module.exports = class NewsPumper {
           //console.log('onHttpBody_::href=<',href,'>');
           this.onWatchLink_(href);
         } else {
-          //console.log('onHttpBody_::href=<',href,'>');
+          console.log('onHttpBody_::href=<',href,'>');
         }
       }
     }

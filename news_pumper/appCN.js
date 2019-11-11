@@ -25,6 +25,11 @@ const sina = require('./seed/sina.js');
 for(let url of sina.seeds) {
   requestList.push(url);
 }
+const qq = require('./seed/qq.js');
+//console.log('qq=<',qq,'>');
+for(let url of qq.seeds) {
+  requestList.push(url);
+}
 
 
 

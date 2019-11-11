@@ -104,7 +104,7 @@ module.exports = class NewsPumper {
         }
       }
     }
-    if(this.globalLoopIndex_ < this.globalLoopIndex_.length) {
+    if(this.globalLoopIndex_ < this.seed_.length) {
       this.globalLoopIndex_++;
       let self = this;
       setTimeout(()=> {

@@ -31,6 +31,17 @@ for(let url of qq.seeds) {
   requestList.push(url);
 }
 
+const sohu = require('./seed/news.sohu.com.js');
+//console.log('sohu=<',sohu,'>');
+for(let url of sohu.seeds) {
+  requestList.push(url);
+}
+
+const zaobao = require('./seed/www.zaobao.com.sg.js');
+//console.log('zaobao=<',zaobao,'>');
+for(let url of zaobao.seeds) {
+  requestList.push(url);
+}
 
 
 console.log('requestList=<',requestList,'>');

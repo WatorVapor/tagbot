@@ -75,9 +75,9 @@ const onPostNewTags = () => {
 const Twitter = require('twitter');
 const clientTwitter = new Twitter({
   consumer_key: 'cKcYfmC6niawGY7kLC9hGHafW',
-  consumer_secret: 'MZ5FP6BYItZOOLuciabtuwHyiHH78bqRb1HnrE3K4PK9obDM5l',
-  access_token_key: '2479678550-zBgOIqB81GtIQj99K6pyqbDlN0dqlJx8pbNCnVp',
-  access_token_secret: '7gxQyigISdvfjKNgQA6VCEIOtcZMSWDyGQs04rg2NgXXq'
+  consumer_secret: '#',
+  access_token_key: '#',
+  access_token_secret: '#'
 });
 
 
